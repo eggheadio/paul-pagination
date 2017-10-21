@@ -21,30 +21,35 @@ const styles = [
   "link"
 ]
 
-const crazyButtonStyles = mapPropsStream(
-  props$ => {
-    return props$.switchMap(
-      props =>
-        Observable.interval(250)
-          .startWith(0)
-          .map(
-            count => count % props.styles.length
-          )
-          .map(index => props.styles[index]),
-      (props, bsStyle) => ({
-        ...props,
-        bsStyle,
-        children: bsStyle
-      })
-    )
-  }
-)
+const sizes = ["large", "small", "xsmall"]
 
-const CrazyButton = crazyButtonStyles(Button)
+const crazy = mapPropsStream(props$ => {
+  return props$.switchMap(
+    props =>
+      Observable.interval(250)
+        .startWith(0)
+        .map(count => ({
+          styleIndex: count % props.styles.length,
+          sizeIndex: count % props.sizes.length
+        }))
+        .map(({ styleIndex, sizeIndex }) => ({
+          bsStyle: props.styles[styleIndex],
+          bsSize: props.sizes[sizeIndex]
+        })),
+    (props, { bsStyle, bsSize }) => ({
+      ...props,
+      bsStyle,
+      bsSize,
+      children: `${bsSize}-${bsStyle}`
+    })
+  )
+})
+
+const CrazyButton = crazy(Button)
 
 render(
   <div>
-    <CrazyButton styles={styles} />
+    <CrazyButton styles={styles} sizes={sizes} />
   </div>,
   document.getElementById("app")
 )
