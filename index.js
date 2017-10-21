@@ -11,45 +11,33 @@ setObservableConfig({
   toESObservable: x => x
 })
 
-const styles = [
-  "success",
-  "warning",
-  "danger",
-  "info",
-  "default",
-  "primary",
-  "link"
-]
-
-const sizes = ["large", "small", "xsmall"]
-
-const crazy = mapPropsStream(props$ => {
-  return props$.switchMap(
+const time = mapPropsStream(props$ =>
+  props$.switchMap(
     props =>
-      Observable.interval(250)
-        .startWith(0)
-        .map(count => ({
-          styleIndex: count % props.styles.length,
-          sizeIndex: count % props.sizes.length
-        }))
-        .map(({ styleIndex, sizeIndex }) => ({
-          bsStyle: props.styles[styleIndex],
-          bsSize: props.sizes[sizeIndex]
-        })),
-    (props, { bsStyle, bsSize }) => ({
-      ...props,
-      bsStyle,
-      bsSize,
-      children: `${bsSize}-${bsStyle}`
-    })
+      Observable.interval(1000).map(() =>
+        new Date().toLocaleDateString(
+          props.locale,
+          {
+            weekday: "long",
+            hour: "numeric",
+            minute: "numeric",
+            second: "numeric"
+          }
+        )
+      ),
+    (props, time) => ({ ...props, time })
   )
-})
+)
 
-const CrazyButton = crazy(Button)
+const Clock = props => <h1>{props.time}</h1>
+
+const ClockWithTime = time(Clock)
 
 render(
   <div>
-    <CrazyButton styles={styles} sizes={sizes} />
+    <ClockWithTime locale="en-US" />
+    <ClockWithTime locale="ja-JP" />
+    <ClockWithTime locale="ar-EG" />
   </div>,
   document.getElementById("app")
 )
