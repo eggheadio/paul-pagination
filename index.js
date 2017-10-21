@@ -4,32 +4,42 @@ import { Button } from "react-bootstrap"
 import { Observable } from "rxjs"
 import {
   setObservableConfig,
-  mapPropsStream
+  mapPropsStream,
+  createEventHandler
 } from "recompose"
 setObservableConfig({
   fromESObservable: Observable.from,
   toESObservable: x => x
 })
 
-const time = mapPropsStream(props$ =>
-  props$.switchMap(
+const time = mapPropsStream(props$ => {
+  const {
+    handler: onClick,
+    stream: onClick$
+  } = createEventHandler()
+
+  const click$ = onClick$.do(console.log.bind(console))
+
+  return props$.switchMap(
     props =>
-      Observable.interval(1000).map(() =>
-        new Date().toLocaleDateString(
-          props.locale,
-          {
+      Observable.interval(1000)
+        .takeUntil(click$)
+        .map(() =>
+          new Date().toLocaleDateString(props.locale, {
             weekday: "long",
             hour: "numeric",
             minute: "numeric",
             second: "numeric"
-          }
+          })
         )
-      ),
-    (props, time) => ({ ...props, time })
+        .startWith(""),
+    (props, time) => ({ ...props, time, onClick })
   )
-)
+})
 
-const Clock = props => <h1>{props.time}</h1>
+const Clock = props => (
+  <h1 onClick={props.onClick}>{props.time}</h1>
+)
 
 const ClockWithTime = time(Clock)
 
