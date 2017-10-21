@@ -1,0 +1,33 @@
+{
+  "name": "paul-pagination",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "react": "^16.0.0",
+    "react-bootstrap": "^0.31.3",
+    "react-dom": "^16.0.0",
+    "recompose": "^0.26.0",
+    "rxjs": "^5.5.0"
+  },
+  "devDependencies": {
+    "babel-plugin-react-require": "^3.0.0",
+    "babel-preset-react-app": "^3.0.3",
+    "poi": "^9.4.0"
+  },
+  "scripts": {
+    "start": "poi index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eggheadio/paul-pagination.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/eggheadio/paul-pagination/issues"
+  },
+  "homepage": "https://github.com/eggheadio/paul-pagination#readme"
+}
