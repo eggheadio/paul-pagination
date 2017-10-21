@@ -271,9 +271,6 @@ function renderPaginators() {
   render(
     <div>
       <Pagination
-        ellipsis
-        next
-        prev
         maxButtons={12}
         page={150}
         pages={300}
